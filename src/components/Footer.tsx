@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Instagram, Facebook, Mail, Phone, MapPin } from "lucide-react";
 import logo from "@/assets/New-logo-Epik-dark.png";
+import { services } from "@/data/services";
 
 const Footer = () => {
   return (
@@ -42,12 +43,17 @@ const Footer = () => {
           {/* Services */}
           <div>
             <h4 className="font-serif text-lg mb-6">Services</h4>
-            <ul className="space-y-3 text-muted-foreground text-sm">
-              <li>Baby Shower Photography</li>
-              <li>Maternity Photoshoot</li>
-              <li>Newborn Photography</li>
-              <li>Pre-Birthday Shoot</li>
-              <li>Family Portraits</li>
+            <ul className="space-y-3">
+              {services.map((service) => (
+                <li key={service.id}>
+                  <Link
+                    to={service.path}
+                    className="text-muted-foreground text-sm hover:text-primary transition-colors duration-300"
+                  >
+                    {service.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

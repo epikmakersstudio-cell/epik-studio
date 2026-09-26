@@ -1,63 +1,63 @@
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
-import { Camera, Heart, Sparkles, Clock, Cake, Star } from "lucide-react";
+import { Camera, Palette, Shirt, Clock, Sparkles, Star } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal, { StaggerContainer, StaggerItem } from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import prebirthday from "@/assets/portfolio-prebirthday.jpg";
+import fashion from "@/assets/portfolio-fashion.jpg";
 
 const features = [
-  { icon: Camera, title: "Theme Sessions", description: "Custom setups matching your chosen theme" },
-  { icon: Heart, title: "Personality Capture", description: "Showcasing your child's unique character" },
-  { icon: Cake, title: "Cake Smash Option", description: "Fun, messy cake smash photos included" },
-  { icon: Clock, title: "1.5-2 Hour Session", description: "Relaxed pace for genuine expressions" },
-  { icon: Sparkles, title: "Props & Decor", description: "Age-appropriate props and backdrops" },
-  { icon: Star, title: "Vibrant Editing", description: "Colorful, joyful post-processing style" },
+  { icon: Palette, title: "Concept Planning", description: "Mood boards and styling direction before the shoot" },
+  { icon: Camera, title: "Studio & Outdoor", description: "Clean studio setups or striking outdoor locations" },
+  { icon: Shirt, title: "Multiple Looks", description: "Outfit and look changes to build a varied portfolio" },
+  { icon: Clock, title: "1-2 Hour Session", description: "Relaxed pace with posing and expression guidance" },
+  { icon: Sparkles, title: "High-End Retouching", description: "Polished, magazine-quality skin and color work" },
+  { icon: Star, title: "Portfolio Ready", description: "Images sized for print, social media and model cards" },
 ];
 
-const PreBirthday = () => {
+const Fashion = () => {
   return (
     <>
       <Helmet>
-        <title>Pre-Birthday & Birthday Photography | Epikmakers</title>
+        <title>Fashion Photography | Epikmakers</title>
         <meta
           name="description"
-          content="Celebrate your child's milestone birthday with themed pre-birthday photography. Includes cake smash option, custom props, and vibrant editing for joyful portraits."
+          content="Editorial fashion photography in Hanamkonda. Portfolio shoots, model portfolios and styled personal shoots with concept planning, multiple looks and high-end retouching."
         />
         <meta
           name="keywords"
-          content="pre-birthday photography, cake smash photos, first birthday shoot, birthday portraits, milestone photography, toddler photos"
+          content="fashion photography, fashion photoshoot, model portfolio, editorial photography, portfolio shoot, styled portraits"
         />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://epikmakers.com/services/pre-birthday" />
-        
+        <link rel="canonical" href="https://epikmakers.com/services/fashion" />
+
         {/* Open Graph */}
-        <meta property="og:title" content="Pre-Birthday & Birthday Photography | Epikmakers" />
-        <meta property="og:description" content="Celebrate your child's milestone birthday with themed pre-birthday photography. Includes cake smash option and custom props." />
+        <meta property="og:title" content="Fashion Photography | Epikmakers" />
+        <meta property="og:description" content="Editorial fashion photography with concept planning, multiple looks and high-end retouching." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://epikmakers.com/services/pre-birthday" />
+        <meta property="og:url" content="https://epikmakers.com/services/fashion" />
         <meta property="og:site_name" content="Epikmakers" />
-        
+
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Pre-Birthday & Birthday Photography | Epikmakers" />
-        <meta name="twitter:description" content="Celebrate your child's milestone birthday with themed pre-birthday photography." />
-        
+        <meta name="twitter:title" content="Fashion Photography | Epikmakers" />
+        <meta name="twitter:description" content="Editorial fashion photography with concept planning and high-end retouching." />
+
         {/* JSON-LD */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Service",
-            "name": "Pre-Birthday & Birthday Photography",
+            "name": "Fashion Photography",
             "provider": {
               "@type": "LocalBusiness",
               "name": "Epikmakers",
               "url": "https://epikmakers.com"
             },
-            "description": "Themed pre-birthday photography sessions celebrating childhood milestones. 1.5-2 hour sessions with cake smash option, custom props, and vibrant editing.",
-            "areaServed": "Local Area",
+            "description": "Editorial fashion and portfolio photography. 1-2 hour studio or outdoor sessions with concept planning, multiple looks and high-end retouching.",
+            "areaServed": "Hanamkonda",
             "serviceType": "Photography"
           })}
         </script>
@@ -65,7 +65,7 @@ const PreBirthday = () => {
 
       <div className="min-h-screen bg-background">
         <Navigation />
-        
+
         {/* Hero Section */}
         <section className="relative min-h-[70vh] min-h-[70svh] pt-28 pb-16 md:pt-32 flex items-center justify-center overflow-hidden">
           <motion.div
@@ -75,13 +75,13 @@ const PreBirthday = () => {
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
             <img
-              src={prebirthday}
-              alt="Pre-Birthday Photography"
-              className="w-full h-full object-cover"
+              src={fashion}
+              alt="Fashion Photography"
+              className="w-full h-full object-cover object-top"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-espresso/60 via-espresso/40 to-background" />
           </motion.div>
-          
+
           <div className="relative z-10 text-center px-4">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -97,7 +97,7 @@ const PreBirthday = () => {
               transition={{ delay: 0.5 }}
               className="font-serif text-4xl md:text-6xl lg:text-7xl text-cream mb-6"
             >
-              Pre-Birthday & Birthday
+              Fashion
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -105,7 +105,7 @@ const PreBirthday = () => {
               transition={{ delay: 0.7 }}
               className="text-cream/80 text-lg md:text-xl max-w-2xl mx-auto"
             >
-              Whimsical celebrations capturing the magic of growing up
+              Bold, editorial imagery that brings your style and personality to life
             </motion.p>
           </div>
         </section>
@@ -118,23 +118,21 @@ const PreBirthday = () => {
                 <div className="space-y-6">
                   <p className="text-primary text-sm tracking-[0.3em] uppercase">About This Service</p>
                   <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl">
-                    Celebrating Milestones
+                    Your Style, In Focus
                   </h2>
                   <div className="space-y-4 text-muted-foreground leading-relaxed">
                     <p>
-                      Every birthday marks another wonderful year of growth, discovery, and joy. 
-                      Our pre-birthday photography sessions capture your child's personality at 
-                      this special age before their big celebration.
+                      Whether you're building a model portfolio, launching a clothing line or simply
+                      want striking portraits that feel like a magazine spread, our fashion sessions
+                      are designed around your look and your goals.
                     </p>
                     <p>
-                      Whether it's a first birthday cake smash, a whimsical themed session, or 
-                      candid portraits that showcase their emerging personality, we create images 
-                      that you'll cherish as they continue to grow.
+                      We start with a concept: mood, colors, locations and outfits. On the day, we guide
+                      your posing and expressions so every frame feels confident and natural.
                     </p>
                     <p>
-                      We work with you to design a session that reflects your child's interests 
-                      and your family's style. From balloon garlands to custom backdrops, every 
-                      detail is thoughtfully curated.
+                      Every image is finished with careful, high-end retouching, ready for your
+                      portfolio, social media or print.
                     </p>
                   </div>
                   <Link to="/contact">
@@ -142,14 +140,14 @@ const PreBirthday = () => {
                   </Link>
                 </div>
               </ScrollReveal>
-              
+
               <ScrollReveal animation="slideRight">
                 <div className="relative">
                   <div className="aspect-[4/5] rounded-sm overflow-hidden">
                     <img
-                      src={prebirthday}
-                      alt="Pre-Birthday session"
-                      className="w-full h-full object-cover"
+                      src={fashion}
+                      alt="Fashion photography session"
+                      className="w-full h-full object-cover object-top"
                     />
                   </div>
                   <div className="absolute -bottom-6 -left-6 w-32 h-32 border-2 border-primary/30 rounded-sm" />
@@ -190,11 +188,11 @@ const PreBirthday = () => {
           <div className="container-luxury text-center">
             <ScrollReveal animation="fadeUp">
               <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl mb-6">
-                Mark This Special Milestone
+                Ready for Your Close-Up?
               </h2>
               <p className="text-cream/80 max-w-2xl mx-auto mb-8">
-                Book 2-4 weeks before your child's birthday to allow time for 
-                photo delivery before the celebration.
+                Tell us about your look and your goals, and we'll plan a shoot that brings
+                your vision to life.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/contact">
@@ -218,4 +216,4 @@ const PreBirthday = () => {
   );
 };
 
-export default PreBirthday;
+export default Fashion;

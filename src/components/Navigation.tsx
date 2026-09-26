@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/New-logo-Epik-dark.png";
+import { services } from "@/data/services";
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -13,14 +14,7 @@ const navLinks = [
   { name: "Contact", path: "/contact" },
 ];
 
-const serviceLinks = [
-  { name: "Fashion", path: "/services/fashion" },
-  { name: "Wedding", path: "/services/wedding" },
-  { name: "Baby Shower & Maternity", path: "/services/baby-shower" },
-  { name: "Pre-Birthday &  Birthday", path: "/services/pre-birthday" },
-  { name: "Newborn", path: "/services/newborn" },
-  { name: "Family Portraits", path: "/services/family-portraits" },
-];
+const serviceLinks = services;
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,71 +1,71 @@
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
-import { Camera, Heart, Sparkles, Clock, Shirt, Star } from "lucide-react";
+import { Camera, Heart, Users, Clock, Sparkles, Star } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal, { StaggerContainer, StaggerItem } from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import maternity from "@/assets/portfolio-maternity.jpg";
+import wedding from "@/assets/portfolio-wedding.jpg";
 
 const features = [
-  { icon: Camera, title: "Artistic Portraits", description: "Stunning poses highlighting your beautiful bump" },
-  { icon: Heart, title: "Emotional Connection", description: "Capturing the bond between parents-to-be" },
-  { icon: Sparkles, title: "Dreamy Aesthetics", description: "Soft lighting and ethereal compositions" },
-  { icon: Clock, title: "1.5-2 Hour Session", description: "Relaxed pace with outfit changes" },
-  { icon: Shirt, title: "Wardrobe Guidance", description: "Styling tips and gown options available" },
-  { icon: Star, title: "Fine Art Editing", description: "Timeless, magazine-quality retouching" },
+  { icon: Heart, title: "Pre-Wedding Consultation", description: "Planning your timeline, must-have shots and style" },
+  { icon: Clock, title: "Full-Day Coverage", description: "From getting ready through the ceremony and reception" },
+  { icon: Camera, title: "Candid & Posed", description: "Natural moments alongside timeless portraits" },
+  { icon: Users, title: "Family & Guests", description: "Group portraits of everyone who matters to you" },
+  { icon: Sparkles, title: "Couple Portraits", description: "A dedicated session for just the two of you" },
+  { icon: Star, title: "Premium Editing", description: "Careful color grading and retouching throughout" },
 ];
 
-const Maternity = () => {
+const Wedding = () => {
   return (
     <>
       <Helmet>
-        <title>Maternity Photography | Epikmakers</title>
+        <title>Wedding Photography | Epikmakers</title>
         <meta
           name="description"
-          content="Celebrate the beauty of motherhood with stunning maternity photography. Professional pregnancy photoshoots capturing the radiant glow and precious bond of expecting parents."
+          content="Wedding photography in Hanamkonda. Full-day coverage of your ceremony and reception with candid moments, couple portraits and family photos, beautifully edited."
         />
         <meta
           name="keywords"
-          content="maternity photography, pregnancy photoshoot, maternity portraits, bump photos, expecting mother photography, prenatal photos"
+          content="wedding photography, wedding photographer, candid wedding photos, couple portraits, reception photography, wedding album"
         />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://epikmakers.com/services/maternity" />
-        
+        <link rel="canonical" href="https://epikmakers.com/services/wedding" />
+
         {/* Open Graph */}
-        <meta property="og:title" content="Maternity Photography | Epikmakers" />
-        <meta property="og:description" content="Celebrate the beauty of motherhood with stunning maternity photography. Professional pregnancy photoshoots capturing your radiant glow." />
+        <meta property="og:title" content="Wedding Photography | Epikmakers" />
+        <meta property="og:description" content="Full-day wedding coverage with candid moments, couple portraits and family photos." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://epikmakers.com/services/maternity" />
+        <meta property="og:url" content="https://epikmakers.com/services/wedding" />
         <meta property="og:site_name" content="Epikmakers" />
-        
+
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Maternity Photography | Epikmakers" />
-        <meta name="twitter:description" content="Celebrate the beauty of motherhood with stunning maternity photography." />
-        
+        <meta name="twitter:title" content="Wedding Photography | Epikmakers" />
+        <meta name="twitter:description" content="Full-day wedding coverage with candid moments and couple portraits." />
+
         {/* JSON-LD */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Service",
-            "name": "Maternity Photography",
+            "name": "Wedding Photography",
             "provider": {
               "@type": "LocalBusiness",
               "name": "Epikmakers",
               "url": "https://epikmakers.com"
             },
-            "description": "Professional maternity photography sessions celebrating the beauty and joy of pregnancy. 1.5-2 hour sessions with outfit changes and artistic editing.",
-            "areaServed": "Local Area",
-            "serviceType": "Photography"
+            "description": "Full-day wedding photography covering the ceremony and reception, with candid moments, couple portraits, family photos and premium editing.",
+            "areaServed": "Hanamkonda",
+            "serviceType": "Wedding Photography"
           })}
         </script>
       </Helmet>
 
       <div className="min-h-screen bg-background">
         <Navigation />
-        
+
         {/* Hero Section */}
         <section className="relative min-h-[70vh] min-h-[70svh] pt-28 pb-16 md:pt-32 flex items-center justify-center overflow-hidden">
           <motion.div
@@ -75,13 +75,13 @@ const Maternity = () => {
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
             <img
-              src={maternity}
-              alt="Maternity Photography"
+              src={wedding}
+              alt="Wedding Photography"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-espresso/60 via-espresso/40 to-background" />
           </motion.div>
-          
+
           <div className="relative z-10 text-center px-4">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -97,7 +97,7 @@ const Maternity = () => {
               transition={{ delay: 0.5 }}
               className="font-serif text-4xl md:text-6xl lg:text-7xl text-cream mb-6"
             >
-              Maternity Photoshoot
+              Wedding
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -105,7 +105,7 @@ const Maternity = () => {
               transition={{ delay: 0.7 }}
               className="text-cream/80 text-lg md:text-xl max-w-2xl mx-auto"
             >
-              Capture the radiant beauty of motherhood in its most precious form
+              Timeless storytelling of your love, from the vows to the last dance
             </motion.p>
           </div>
         </section>
@@ -118,23 +118,20 @@ const Maternity = () => {
                 <div className="space-y-6">
                   <p className="text-primary text-sm tracking-[0.3em] uppercase">About This Service</p>
                   <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl">
-                    Celebrating Motherhood
+                    Your Day, Beautifully Told
                   </h2>
                   <div className="space-y-4 text-muted-foreground leading-relaxed">
                     <p>
-                      Pregnancy is a transformative journey filled with anticipation, love, and profound 
-                      beauty. Our maternity photography sessions are designed to honor this incredible 
-                      chapter in your life.
+                      Your wedding day passes in a blur of emotion. We make sure every glance, every
+                      ritual and every celebration is preserved so you can relive it for years to come.
                     </p>
                     <p>
-                      We create a comfortable, relaxed environment where you can feel confident and 
-                      beautiful. Our artistic approach combines soft, natural lighting with elegant 
-                      poses that flatter and celebrate your changing body.
+                      Our approach blends unobtrusive candid photography with carefully composed
+                      portraits of the two of you, your families and your guests.
                     </p>
                     <p>
-                      Whether you prefer an intimate indoor session or a romantic outdoor setting, 
-                      we'll work together to create images that you'll treasure forever—timeless 
-                      portraits that capture the essence of this magical time.
+                      Before the day, we sit down together to plan your timeline and the moments that
+                      matter most, so on the day you can simply enjoy it.
                     </p>
                   </div>
                   <Link to="/contact">
@@ -142,13 +139,13 @@ const Maternity = () => {
                   </Link>
                 </div>
               </ScrollReveal>
-              
+
               <ScrollReveal animation="slideRight">
                 <div className="relative">
                   <div className="aspect-[4/5] rounded-sm overflow-hidden">
                     <img
-                      src={maternity}
-                      alt="Maternity session"
+                      src={wedding}
+                      alt="Wedding photography session"
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -190,11 +187,11 @@ const Maternity = () => {
           <div className="container-luxury text-center">
             <ScrollReveal animation="fadeUp">
               <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl mb-6">
-                Embrace This Beautiful Journey
+                Saying "I Do" Soon?
               </h2>
               <p className="text-cream/80 max-w-2xl mx-auto mb-8">
-                The ideal time for maternity photos is between 28-34 weeks. 
-                Book early to secure your preferred date.
+                Wedding dates fill up quickly. Get in touch to check availability and plan
+                the coverage that's right for your celebration.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/contact">
@@ -218,4 +215,4 @@ const Maternity = () => {
   );
 };
 
-export default Maternity;
+export default Wedding;

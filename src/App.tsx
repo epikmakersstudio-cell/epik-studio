@@ -2,15 +2,16 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Portfolio from "./pages/Portfolio";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Reviews from "./pages/Reviews";
 import Pricing from "./pages/Pricing";
+import Fashion from "./pages/Fashion";
+import Wedding from "./pages/Wedding";
 import BabyShower from "./pages/BabyShower";
-import Maternity from "./pages/Maternity";
 import Newborn from "./pages/Newborn";
 import PreBirthday from "./pages/PreBirthday";
 import FamilyPortraits from "./pages/FamilyPortraits";
@@ -31,8 +32,11 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/services/fashion" element={<Fashion />} />
+          <Route path="/services/wedding" element={<Wedding />} />
           <Route path="/services/baby-shower" element={<BabyShower />} />
-          <Route path="/services/maternity" element={<Maternity />} />
+          {/* Maternity is now part of the combined Baby Shower & Maternity service */}
+          <Route path="/services/maternity" element={<Navigate to="/services/baby-shower" replace />} />
           <Route path="/services/newborn" element={<Newborn />} />
           <Route path="/services/pre-birthday" element={<PreBirthday />} />
           <Route path="/services/family-portraits" element={<FamilyPortraits />} />

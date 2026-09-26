@@ -9,52 +9,41 @@ import family from "@/assets/portfolio-family.jpg";
 import fashion from "@/assets/portfolio-fashion.jpg";
 import wedding from "@/assets/portfolio-wedding.jpg";
 import ScrollReveal, { StaggerContainer, StaggerItem } from "./ScrollReveal";
+import { services as serviceList, type ServiceId } from "@/data/services";
 
-const services = [
-  {
-    title: "Fashion",
-    description:
-      "Bold, editorial imagery that brings your style and personality to life",
+const cardDetails: Record<ServiceId, { description: string; image: string; imagePosition?: string }> = {
+  fashion: {
+    description: "Bold, editorial imagery that brings your style and personality to life",
     image: fashion,
-    link: "/services/fashion",
     imagePosition: "object-top",
   },
-  {
-    title: "Wedding",
-    description:
-      "Timeless storytelling of your love, from the vows to the last dance",
+  wedding: {
+    description: "Timeless storytelling of your love, from the vows to the last dance",
     image: wedding,
-    link: "/services/wedding",
   },
-  {
-    title: "Baby Shower & Maternity",
-    description:
-      "Celebrate the radiant beauty of motherhood and the joy of anticipation",
+  "baby-shower-maternity": {
+    description: "Celebrate the radiant beauty of motherhood and the joy of anticipation",
     image: maternity,
-    link: "/services/baby-shower",
   },
-  {
-    title: "Pre-Birthday & Birthday",
-    description:
-      "Whimsical celebrations capturing the magic of growing up",
+  "pre-birthday-birthday": {
+    description: "Whimsical celebrations capturing the magic of growing up",
     image: prebirthday,
-    link: "/services/pre-birthday",
   },
-  {
-    title: "Newborn",
-    description:
-      "Tender, intimate portraits of your newest family member",
+  newborn: {
+    description: "Tender, intimate portraits of your newest family member",
     image: newborn,
-    link: "/services/newborn",
   },
-  {
-    title: "Family Portraits",
-    description:
-      "Timeless portraits celebrating your family's unique story and connections",
+  "family-portraits": {
+    description: "Timeless portraits celebrating your family's unique story and connections",
     image: family,
-    link: "/services/family-portraits",
   },
-];
+};
+
+const services = serviceList.map((service) => ({
+  title: service.name,
+  link: service.path,
+  ...cardDetails[service.id],
+}));
 
 const ServicesSection = () => {
   return (

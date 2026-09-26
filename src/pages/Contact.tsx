@@ -6,6 +6,7 @@ import ScrollReveal, { StaggerContainer, StaggerItem } from "@/components/Scroll
 import { MapPin, Phone, Mail, Clock, MessageCircle, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { services } from "@/data/services";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name too long"),
@@ -319,10 +320,11 @@ const Contact = () => {
                           className="field-luxury"
                         >
                           <option value="">Select a service</option>
-                          <option value="maternity">Maternity Photoshoot</option>
-                          <option value="newborn">Newborn Photography</option>
-                          <option value="babyshower">Baby Shower</option>
-                          <option value="prebirthday">Pre-Birthday Shoot</option>
+                          {services.map((service) => (
+                            <option key={service.id} value={service.id}>
+                              {service.name}
+                            </option>
+                          ))}
                           <option value="other">Other</option>
                         </select>
                       </div>

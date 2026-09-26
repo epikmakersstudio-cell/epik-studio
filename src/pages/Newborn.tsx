@@ -97,7 +97,7 @@ const Newborn = () => {
               transition={{ delay: 0.5 }}
               className="font-serif text-4xl md:text-6xl lg:text-7xl text-cream mb-6"
             >
-              Newborn Photography
+              Newborn
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}

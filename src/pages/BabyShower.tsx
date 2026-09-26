@@ -24,17 +24,17 @@ const BabyShower = () => {
         <title>Baby Shower & Maternity Photography | Epikmakers</title>
         <meta
           name="description"
-          content="Document your baby shower celebration with professional photography. Capture decorations, guest portraits, games, and heartfelt moments of anticipation and joy."
+          content="Maternity portraits and baby shower photography in Hanamkonda. Celebrate your pregnancy and capture decorations, guest portraits and heartfelt moments of anticipation and joy."
         />
         <meta
           name="keywords"
-          content="baby shower photography, baby shower photographer, event photography, celebration photos, party photography, baby shower pictures"
+          content="maternity photoshoot, maternity photography, pregnancy photos, baby shower photography, baby shower photographer, celebration photos"
         />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://epikmakers.com/services/baby-shower" />
         
         {/* Open Graph */}
-        <meta property="og:title" content="Baby Shower Photography | Epikmakers" />
+        <meta property="og:title" content="Baby Shower & Maternity Photography | Epikmakers" />
         <meta property="og:description" content="Document your baby shower celebration with professional photography. Capture decorations, guests, and heartfelt moments." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://epikmakers.com/services/baby-shower" />
@@ -42,7 +42,7 @@ const BabyShower = () => {
         
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Baby Shower Photography | Epikmakers" />
+        <meta name="twitter:title" content="Baby Shower & Maternity Photography | Epikmakers" />
         <meta name="twitter:description" content="Document your baby shower celebration with professional photography." />
         
         {/* JSON-LD */}
@@ -50,13 +50,13 @@ const BabyShower = () => {
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Service",
-            "name": "Baby Shower Photography",
+            "name": "Baby Shower & Maternity Photography",
             "provider": {
               "@type": "LocalBusiness",
               "name": "Epikmakers",
               "url": "https://epikmakers.com"
             },
-            "description": "Professional baby shower photography services. 2-3 hour event coverage including guest portraits, decorations, and candid celebration moments.",
+            "description": "Maternity portraits and baby shower photography, from styled pregnancy sessions to event coverage with guest portraits, decorations and candid celebration moments.",
             "areaServed": "Local Area",
             "serviceType": "Event Photography"
           })}
@@ -97,7 +97,7 @@ const BabyShower = () => {
               transition={{ delay: 0.5 }}
               className="font-serif text-4xl md:text-6xl lg:text-7xl text-cream mb-6"
             >
-              Baby Shower Photography
+              Baby Shower & Maternity
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -105,7 +105,7 @@ const BabyShower = () => {
               transition={{ delay: 0.7 }}
               className="text-cream/80 text-lg md:text-xl max-w-2xl mx-auto"
             >
-              Celebrate the joy of anticipation with elegant, heartfelt photography
+              Celebrate the radiant beauty of motherhood and the joy of anticipation
             </motion.p>
           </div>
         </section>
@@ -118,12 +118,17 @@ const BabyShower = () => {
                 <div className="space-y-6">
                   <p className="text-primary text-sm tracking-[0.3em] uppercase">About This Service</p>
                   <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl">
-                    Capturing Your Celebration
+                    Celebrating Motherhood
                   </h2>
                   <div className="space-y-4 text-muted-foreground leading-relaxed">
                     <p>
-                      A baby shower is one of the most joyous celebrations—a gathering of love, laughter, 
-                      and anticipation. Our baby shower photography service ensures every precious moment 
+                      Pregnancy is a once-in-a-lifetime journey. Our maternity portraits celebrate your
+                      glow, your bump and the bond with your partner and family, in the studio or outdoors,
+                      with styling guidance so you feel beautiful and at ease.
+                    </p>
+                    <p>
+                      A baby shower is one of the most joyous celebrations—a gathering of love, laughter,
+                      and anticipation. Our baby shower photography service ensures every precious moment
                       is beautifully preserved.
                     </p>
                     <p>

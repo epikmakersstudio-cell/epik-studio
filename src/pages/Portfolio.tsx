@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { services, type ServiceId } from "@/data/services";
 
 import babyshower from "@/assets/portfolio-babyshower.jpg";
 import maternity from "@/assets/portfolio-maternity.jpg";
@@ -13,42 +14,36 @@ import hero1 from "@/assets/hero-1.jpg";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
 
+const serviceName = (id: ServiceId) => services.find((s) => s.id === id)!.name;
+
+// Only services with studio work to show are listed here, in the same order as the services menu
 const categories = [
   {
-    id: "baby-shower",
-    title: "Baby Shower",
-    subtitle: "Celebrating anticipation",
-    description:
-      "Capture the joy and excitement of welcoming a new life. Our baby shower photography focuses on the beautiful details, heartfelt moments, and the love shared between family and friends.",
-    coverImage: babyshower,
-    images: [babyshower, hero3],
-  },
-  {
-    id: "maternity",
-    title: "Maternity",
+    id: "baby-shower-maternity",
+    title: serviceName("baby-shower-maternity"),
     subtitle: "The beauty of motherhood",
     description:
-      "Celebrate the incredible journey of pregnancy with stunning, ethereal portraits. We create timeless images that honor the strength, beauty, and emotion of this transformative time.",
+      "Celebrate the incredible journey of pregnancy and the joy of welcoming a new life. From ethereal maternity portraits to the heartfelt moments of your baby shower, we create timeless images of this transformative time.",
     coverImage: maternity,
-    images: [maternity, hero1],
+    images: [maternity, babyshower, hero1, hero3],
+  },
+  {
+    id: "pre-birthday-birthday",
+    title: serviceName("pre-birthday-birthday"),
+    subtitle: "Whimsical celebrations",
+    description:
+      "Mark your little one's milestone with magical, playful photography. From themed pre-birthday shoots to the birthday party itself, we create enchanting images that capture their unique personality.",
+    coverImage: prebirthday,
+    images: [prebirthday],
   },
   {
     id: "newborn",
-    title: "Newborn",
+    title: serviceName("newborn"),
     subtitle: "First precious moments",
     description:
       "Those tiny fingers, peaceful sleeps, and pure innocence—newborn photography preserves the fleeting beauty of your baby's earliest days in artistic, tender portraits.",
     coverImage: newborn,
     images: [newborn, hero2],
-  },
-  {
-    id: "pre-birthday",
-    title: "Pre-Birthday",
-    subtitle: "Whimsical celebrations",
-    description:
-      "Mark your little one's milestone with magical, playful photography. From first birthdays to special ages, we create enchanting images that capture their unique personality.",
-    coverImage: prebirthday,
-    images: [prebirthday],
   },
 ];
 

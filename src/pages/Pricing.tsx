@@ -1,34 +1,76 @@
 import { motion } from "framer-motion";
-import { Check, MessageCircle, Camera, Heart, Sparkles, Users, Baby, Cake } from "lucide-react";
+import { Check, MessageCircle, Camera, Heart, Sparkles, Users, Baby, Cake, type LucideIcon } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal, { StaggerContainer, StaggerItem } from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
+import { services, type ServiceId } from "@/data/services";
 
 const WHATSAPP_NUMBER = "919876543210"; // Replace with actual WhatsApp number
 const WHATSAPP_BASE_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
-const packages = [
-  {
-    name: "Maternity",
-    icon: Heart,
-    description: "Celebrate the beauty of pregnancy",
+const packageDetails: Record<
+  ServiceId,
+  { icon: LucideIcon; description: string; features: string[]; popular?: boolean }
+> = {
+  fashion: {
+    icon: Camera,
+    description: "Editorial style, made personal",
     features: [
-      "1.5-2 hour session",
-      "Studio or outdoor location",
-      "2 outfit changes",
-      "Partner/sibling inclusion",
-      "Styling guidance",
+      "1-2 hour studio or outdoor shoot",
+      "Concept & mood board planning",
+      "Multiple outfit & look changes",
+      "Posing & expression guidance",
+      "High-end retouching",
       "20+ edited digital images",
       "Online gallery access",
       "Print release included",
     ],
-    popular: false,
-    whatsappMessage: "Hi! I'm interested in the Maternity Photography package. Could you please share the pricing details?",
   },
-  {
-    name: "Newborn",
+  wedding: {
+    icon: Heart,
+    description: "Your love story, beautifully told",
+    features: [
+      "Full-day event coverage",
+      "Pre-wedding consultation",
+      "Ceremony & reception",
+      "Couple & family portraits",
+      "Candid moment capture",
+      "300+ edited digital images",
+      "Online gallery access",
+      "Print release included",
+    ],
+  },
+  "baby-shower-maternity": {
+    icon: Sparkles,
+    description: "Celebrate motherhood and the joy ahead",
+    features: [
+      "Maternity portraits & event coverage",
+      "Studio, outdoor or venue",
+      "Outfit changes & styling guidance",
+      "Partner, family & guest portraits",
+      "Detail & decoration shots",
+      "50+ edited digital images",
+      "Online gallery access",
+      "Print release included",
+    ],
+  },
+  "pre-birthday-birthday": {
+    icon: Cake,
+    description: "Celebrate milestones in style",
+    features: [
+      "Themed pre-birthday shoot",
+      "Birthday party coverage",
+      "Custom setup & decor",
+      "Cake smash option",
+      "Age-appropriate props",
+      "25+ edited digital images",
+      "Online gallery access",
+      "Print release included",
+    ],
+  },
+  newborn: {
     icon: Baby,
     description: "Capture precious first moments",
     features: [
@@ -42,44 +84,8 @@ const packages = [
       "Print release included",
     ],
     popular: true,
-    whatsappMessage: "Hi! I'm interested in the Newborn Photography package. Could you please share the pricing details?",
   },
-  {
-    name: "Baby Shower",
-    icon: Sparkles,
-    description: "Document your celebration",
-    features: [
-      "2-3 hour event coverage",
-      "Venue or studio setup",
-      "Guest & group portraits",
-      "Detail & decoration shots",
-      "Candid moment capture",
-      "50+ edited digital images",
-      "Online gallery access",
-      "Print release included",
-    ],
-    popular: false,
-    whatsappMessage: "Hi! I'm interested in the Baby Shower Photography package. Could you please share the pricing details?",
-  },
-  {
-    name: "Pre-Birthday",
-    icon: Cake,
-    description: "Celebrate milestones in style",
-    features: [
-      "1.5-2 hour themed session",
-      "Custom setup & decor",
-      "Cake smash option",
-      "Multiple outfit changes",
-      "Age-appropriate props",
-      "25+ edited digital images",
-      "Online gallery access",
-      "Print release included",
-    ],
-    popular: false,
-    whatsappMessage: "Hi! I'm interested in the Pre-Birthday Photography package. Could you please share the pricing details?",
-  },
-  {
-    name: "Family Portraits",
+  "family-portraits": {
     icon: Users,
     description: "Timeless family memories",
     features: [
@@ -92,10 +98,15 @@ const packages = [
       "Online gallery access",
       "Print release included",
     ],
-    popular: false,
-    whatsappMessage: "Hi! I'm interested in the Family Portraits package. Could you please share the pricing details?",
   },
-];
+};
+
+const packages = services.map((service) => ({
+  name: service.name,
+  ...packageDetails[service.id],
+  popular: packageDetails[service.id].popular ?? false,
+  whatsappMessage: `Hi! I'm interested in the ${service.name} photography package. Could you please share the pricing details?`,
+}));
 
 const addOns = [
   { name: "Additional edited images", description: "Per 10 images" },
@@ -113,18 +124,18 @@ const Pricing = () => {
         <title>Photography Packages & Pricing | Epikmakers</title>
         <meta
           name="description"
-          content="Explore Epikmakers packages for maternity, newborn, baby shower, pre-birthday, and family portrait sessions. Contact us on WhatsApp for personalized pricing."
+          content="Explore Epikmakers packages for fashion, wedding, baby shower & maternity, pre-birthday & birthday, newborn, and family portrait sessions. Contact us on WhatsApp for personalized pricing."
         />
         <meta
           name="keywords"
-          content="photography pricing, maternity package, newborn photography cost, baby shower photographer, family portrait pricing, pre-birthday photo session"
+          content="photography pricing, fashion photoshoot, wedding photography package, baby shower photographer, maternity package, pre-birthday photo session, birthday photography, newborn photography cost, family portrait pricing"
         />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://epikmakers.com/pricing" />
         
         {/* Open Graph */}
         <meta property="og:title" content="Photography Packages & Pricing | Epikmakers" />
-        <meta property="og:description" content="Explore our photography packages for maternity, newborn, baby shower, pre-birthday, and family portraits. Contact us for personalized pricing." />
+        <meta property="og:description" content="Explore our photography packages for fashion, wedding, baby shower & maternity, pre-birthday & birthday, newborn, and family portraits. Contact us for personalized pricing." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://epikmakers.com/pricing" />
         <meta property="og:site_name" content="Epikmakers" />
@@ -132,7 +143,7 @@ const Pricing = () => {
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Photography Packages & Pricing | Epikmakers" />
-        <meta name="twitter:description" content="Explore our photography packages for maternity, newborn, baby shower, pre-birthday, and family portraits." />
+        <meta name="twitter:description" content="Explore our photography packages for fashion, wedding, baby shower & maternity, pre-birthday & birthday, newborn, and family portraits." />
         
         {/* JSON-LD */}
         <script type="application/ld+json">
