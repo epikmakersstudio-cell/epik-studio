@@ -46,7 +46,7 @@ const AboutPreview = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.4, duration: 0.5, type: "spring" }}
             >
-              <p className="font-serif text-3xl md:text-4xl font-medium">10+</p>
+              <p className="font-serif text-3xl md:text-4xl font-medium">24+</p>
               <p className="text-xs tracking-wider uppercase">Years of Artistry</p>
             </motion.div>
           </ScrollReveal>

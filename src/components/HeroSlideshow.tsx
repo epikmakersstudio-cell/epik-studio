@@ -59,8 +59,27 @@ const HeroSlideshow = () => {
     return () => clearInterval(interval);
   }, [nextSlide]);
 
+  // Swipe between slides on touch screens, where the arrow buttons are hidden
+  const touchStartX = useRef<number | null>(null);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(deltaX) < 50) return;
+    if (deltaX < 0) nextSlide();
+    else prevSlide();
+  };
+
   return (
-    <section ref={containerRef} className="relative h-screen overflow-hidden">
+    <section
+      ref={containerRef}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      className="relative h-screen h-[100svh] min-h-[560px] overflow-hidden"
+    >
       {/* Background Slides with Parallax */}
       <motion.div style={{ y, scale }} className="absolute inset-0">
         {slides.map((slide, index) => (
@@ -81,6 +100,8 @@ const HeroSlideshow = () => {
             {/* Overlay */}
             <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background/80" />
             <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-transparent" />
+            {/* On narrow screens the text spans the whole image, so give its lower half a stronger wash */}
+            <div className="absolute inset-x-0 bottom-0 h-full bg-gradient-to-t from-background/90 via-background/70 to-transparent md:hidden" />
           </div>
         ))}
       </motion.div>
@@ -88,7 +109,7 @@ const HeroSlideshow = () => {
       {/* Content with Fade on Scroll */}
       <motion.div
         style={{ opacity }}
-        className="relative z-10 h-full flex flex-col justify-end pb-32 md:pb-40 container-luxury"
+        className="relative z-10 h-full flex flex-col justify-end pb-24 sm:pb-32 md:pb-40 container-luxury"
       >
         <div className="max-w-2xl">
           <p className="text-primary text-sm tracking-[0.3em] uppercase mb-4 animate-fade-up opacity-0 [animation-delay:200ms] [animation-fill-mode:forwards]">
@@ -96,11 +117,11 @@ const HeroSlideshow = () => {
           </p>
           <h1
             key={currentSlide}
-            className="font-serif text-5xl md:text-7xl lg:text-8xl font-medium text-foreground mb-6 animate-fade-up opacity-0 [animation-delay:400ms] [animation-fill-mode:forwards]"
+            className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-medium text-foreground mb-6 animate-fade-up opacity-0 [animation-delay:400ms] [animation-fill-mode:forwards]"
           >
             {slides[currentSlide].title}
           </h1>
-          <p className="text-foreground/80 text-lg md:text-xl font-light mb-8 max-w-lg animate-fade-up opacity-0 [animation-delay:600ms] [animation-fill-mode:forwards]">
+          <p className="text-foreground/80 text-base sm:text-lg md:text-xl font-light mb-8 max-w-lg animate-fade-up opacity-0 [animation-delay:600ms] [animation-fill-mode:forwards]">
             Timeless photography that tells your unique story with elegance and
             artistry
           </p>
@@ -116,7 +137,7 @@ const HeroSlideshow = () => {
       </motion.div>
 
       {/* Navigation Arrows */}
-      <div className="absolute bottom-32 md:bottom-40 right-6 md:right-12 flex gap-2 z-20">
+      <div className="absolute bottom-40 right-8 lg:right-12 hidden md:flex gap-2 z-20">
         <button
           onClick={prevSlide}
           className="glass-panel rounded-full p-3 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300"
@@ -134,24 +155,28 @@ const HeroSlideshow = () => {
       </div>
 
       {/* Slide Indicators */}
-      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+      <div className="absolute bottom-12 md:bottom-16 left-1/2 -translate-x-1/2 flex gap-1 z-20">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={cn(
-              "h-0.5 transition-all duration-500",
-              index === currentSlide
-                ? "w-12 bg-primary"
-                : "w-6 bg-foreground/30 hover:bg-foreground/50"
-            )}
+            className="group py-4 px-1"
             aria-label={`Go to slide ${index + 1}`}
-          />
+          >
+            <span
+              className={cn(
+                "block h-0.5 transition-all duration-500",
+                index === currentSlide
+                  ? "w-12 bg-primary"
+                  : "w-6 bg-foreground/30 group-hover:bg-foreground/50"
+              )}
+            />
+          </button>
         ))}
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
+      <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-20">
         <div className="w-px h-12 bg-gradient-to-b from-transparent via-primary to-transparent animate-pulse" />
       </div>
     </section>

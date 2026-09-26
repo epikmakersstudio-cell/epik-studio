@@ -123,11 +123,18 @@ const Contact = () => {
                     </div>
                     <div>
                       <h4 className="font-medium mb-1">Studio Location</h4>
-                      <p className="text-muted-foreground text-sm">
-                        123 Artistry Lane, Creative District
+                      <a
+                        href="https://www.google.com/maps/place/epikmakers_littlenest+Newborn+studio/@17.9936444,79.5674227,17z/data=!4m6!3m5!1s0x648ad22b341ded05:0xdf3014d3743df8b3!8m2!3d17.9936444!4d79.5674227!16s%2Fg%2F11n3pj3z2r"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground text-sm hover:text-primary transition-colors"
+                      >
+                        7-1-364/A/1, Beside Sri Ram Nagar Colony Arch,
                         <br />
-                        New York, NY 10001
-                      </p>
+                        Padmakshi Temple Road, Meerpet,
+                        <br />
+                        Hanamkonda, Telangana 506001
+                      </a>
                     </div>
                   </div>
                 </StaggerItem>
@@ -157,10 +164,10 @@ const Contact = () => {
                     <div>
                       <h4 className="font-medium mb-1">Email</h4>
                       <a
-                        href="mailto:hello@lumierestudio.com"
+                        href="mailto:hello@epikmakers.com"
                         className="text-muted-foreground text-sm hover:text-primary transition-colors"
                       >
-                        hello@lumierestudio.com
+                        hello@epikmakers.com
                       </a>
                     </div>
                   </div>

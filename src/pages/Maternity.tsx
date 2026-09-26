@@ -21,7 +21,7 @@ const Maternity = () => {
   return (
     <>
       <Helmet>
-        <title>Maternity Photography | Epikmakers Photography</title>
+        <title>Maternity Photography | Epikmakers</title>
         <meta
           name="description"
           content="Celebrate the beauty of motherhood with stunning maternity photography. Professional pregnancy photoshoots capturing the radiant glow and precious bond of expecting parents."
@@ -31,18 +31,18 @@ const Maternity = () => {
           content="maternity photography, pregnancy photoshoot, maternity portraits, bump photos, expecting mother photography, prenatal photos"
         />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://littlenest.com/services/maternity" />
+        <link rel="canonical" href="https://epikmakers.com/services/maternity" />
         
         {/* Open Graph */}
-        <meta property="og:title" content="Maternity Photography | Epikmakers Photography" />
+        <meta property="og:title" content="Maternity Photography | Epikmakers" />
         <meta property="og:description" content="Celebrate the beauty of motherhood with stunning maternity photography. Professional pregnancy photoshoots capturing your radiant glow." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://littlenest.com/services/maternity" />
-        <meta property="og:site_name" content="Epikmakers Photography" />
+        <meta property="og:url" content="https://epikmakers.com/services/maternity" />
+        <meta property="og:site_name" content="Epikmakers" />
         
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Maternity Photography | Epikmakers Photography" />
+        <meta name="twitter:title" content="Maternity Photography | Epikmakers" />
         <meta name="twitter:description" content="Celebrate the beauty of motherhood with stunning maternity photography." />
         
         {/* JSON-LD */}
@@ -53,8 +53,8 @@ const Maternity = () => {
             "name": "Maternity Photography",
             "provider": {
               "@type": "LocalBusiness",
-              "name": "Epikmakers Photography",
-              "url": "https://littlenest.com"
+              "name": "Epikmakers",
+              "url": "https://epikmakers.com"
             },
             "description": "Professional maternity photography sessions celebrating the beauty and joy of pregnancy. 1.5-2 hour sessions with outfit changes and artistic editing.",
             "areaServed": "Local Area",
@@ -67,7 +67,7 @@ const Maternity = () => {
         <Navigation />
         
         {/* Hero Section */}
-        <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[70vh] min-h-[70svh] pt-28 pb-16 md:pt-32 flex items-center justify-center overflow-hidden">
           <motion.div
             className="absolute inset-0"
             initial={{ scale: 1.1 }}
@@ -113,7 +113,7 @@ const Maternity = () => {
         {/* Description Section */}
         <section className="section-padding bg-background">
           <div className="container-luxury">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               <ScrollReveal animation="slideLeft">
                 <div className="space-y-6">
                   <p className="text-primary text-sm tracking-[0.3em] uppercase">About This Service</p>
@@ -169,7 +169,7 @@ const Maternity = () => {
               <div className="divider-elegant" />
             </ScrollReveal>
 
-            <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature) => (
                 <StaggerItem key={feature.title}>
                   <div className="card-luxury p-8 text-center h-full">
@@ -198,13 +198,13 @@ const Maternity = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/contact">
-                  <Button className="btn-luxury bg-cream text-espresso hover:bg-cream/90">
+                  <Button className="btn-luxury hover:bg-primary/90">
                     Book Now
                   </Button>
                 </Link>
-                <Link to="/gallery">
+                <Link to="/portfolio">
                   <Button variant="outline" className="bg-transparent border-cream/40 text-cream hover:bg-cream/10 hover:text-cream px-8 uppercase tracking-widest">
-                    View Gallery
+                    View Portfolio
                   </Button>
                 </Link>
               </div>

@@ -110,28 +110,28 @@ const Pricing = () => {
   return (
     <>
       <Helmet>
-        <title>Photography Packages & Pricing | Epikmakers Photography</title>
+        <title>Photography Packages & Pricing | Epikmakers</title>
         <meta
           name="description"
-          content="Explore Epikmakers Photography packages for maternity, newborn, baby shower, pre-birthday, and family portrait sessions. Contact us on WhatsApp for personalized pricing."
+          content="Explore Epikmakers packages for maternity, newborn, baby shower, pre-birthday, and family portrait sessions. Contact us on WhatsApp for personalized pricing."
         />
         <meta
           name="keywords"
           content="photography pricing, maternity package, newborn photography cost, baby shower photographer, family portrait pricing, pre-birthday photo session"
         />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://littlenest.com/pricing" />
+        <link rel="canonical" href="https://epikmakers.com/pricing" />
         
         {/* Open Graph */}
-        <meta property="og:title" content="Photography Packages & Pricing | Epikmakers Photography" />
+        <meta property="og:title" content="Photography Packages & Pricing | Epikmakers" />
         <meta property="og:description" content="Explore our photography packages for maternity, newborn, baby shower, pre-birthday, and family portraits. Contact us for personalized pricing." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://littlenest.com/pricing" />
-        <meta property="og:site_name" content="Epikmakers Photography" />
+        <meta property="og:url" content="https://epikmakers.com/pricing" />
+        <meta property="og:site_name" content="Epikmakers" />
         
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Photography Packages & Pricing | Epikmakers Photography" />
+        <meta name="twitter:title" content="Photography Packages & Pricing | Epikmakers" />
         <meta name="twitter:description" content="Explore our photography packages for maternity, newborn, baby shower, pre-birthday, and family portraits." />
         
         {/* JSON-LD */}
@@ -139,11 +139,11 @@ const Pricing = () => {
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Service",
-            "name": "Epikmakers Photography Services",
+            "name": "Epikmakers Services",
             "provider": {
               "@type": "LocalBusiness",
-              "name": "Epikmakers Photography",
-              "url": "https://littlenest.com"
+              "name": "Epikmakers",
+              "url": "https://epikmakers.com"
             },
             "hasOfferCatalog": {
               "@type": "OfferCatalog",
@@ -196,11 +196,11 @@ const Pricing = () => {
         {/* Packages Grid */}
         <section className="section-padding bg-background">
           <div className="container-luxury">
-            <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {packages.map((pkg) => (
                 <StaggerItem key={pkg.name}>
                   <div 
-                    className={`card-luxury overflow-visible p-8 h-full flex flex-col relative ${
+                    className={`card-luxury overflow-visible p-6 sm:p-8 h-full flex flex-col relative ${
                       pkg.popular ? "ring-2 ring-primary" : ""
                     }`}
                   >
@@ -236,7 +236,7 @@ const Pricing = () => {
                       className="block"
                     >
                       <Button 
-                        className={`w-full gap-2 ${
+                        className={`w-full h-auto min-h-11 gap-2 whitespace-normal text-center ${
                           pkg.popular 
                             ? "btn-luxury" 
                             : "bg-secondary hover:bg-secondary/80 text-secondary-foreground"
@@ -266,7 +266,7 @@ const Pricing = () => {
               <div className="divider-elegant" />
             </ScrollReveal>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
               {addOns.map((addon, index) => (
                 <ScrollReveal key={addon.name} animation="fadeUp" delay={index * 0.1}>
                   <div className="bg-background surface-card p-6 text-center">
@@ -292,7 +292,7 @@ const Pricing = () => {
               <div className="divider-elegant" />
             </ScrollReveal>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <ScrollReveal animation="slideLeft">
                 <div className="space-y-6">
                   <div className="card-luxury p-6">
@@ -350,7 +350,7 @@ const Pricing = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Button className="btn-luxury bg-cream text-espresso hover:bg-cream/90 gap-2">
+                <Button className="btn-luxury hover:bg-primary/90 gap-2">
                   <MessageCircle className="w-5 h-5" />
                   Chat on WhatsApp
                 </Button>

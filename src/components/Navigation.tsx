@@ -1,12 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import logo from "@/assets/New-logo-Epik-dark.png";
 
 const navLinks = [
   { name: "Home", path: "/" },
   { name: "Portfolio", path: "/portfolio" },
-  { name: "Gallery", path: "/gallery" },
   { name: "Pricing", path: "/pricing" },
   { name: "About", path: "/about" },
   { name: "Reviews", path: "/reviews" },
@@ -27,23 +27,59 @@ const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(72);
+  const headerRef = useRef<HTMLElement>(null);
   const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // The header's height changes with scroll and breakpoint; the mobile menu sits right below it
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const observer = new ResizeObserver(() => setHeaderHeight(header.offsetHeight));
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+    setMobileServicesOpen(false);
+  }, [location.pathname]);
+
+  // Keep the page behind the open mobile menu from scrolling
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [isOpen]);
+
+  // Close the mobile menu when the viewport grows into the desktop layout
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1280px)");
+    const handleChange = (e: MediaQueryListEvent) => e.matches && setIsOpen(false);
+    desktop.addEventListener("change", handleChange);
+    return () => desktop.removeEventListener("change", handleChange);
   }, []);
 
   const isServicePage = location.pathname.startsWith("/services");
 
   return (
     <header
+      ref={headerRef}
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-        isScrolled ? "py-4" : "py-6",
+        isScrolled || isOpen ? "py-3 md:py-4" : "py-4 md:py-6",
       )}
     >
       {/*
@@ -54,21 +90,25 @@ const Navigation = () => {
         aria-hidden
         className={cn(
           "glass-header pointer-events-none absolute inset-0 -z-10 transition-opacity duration-500",
-          isScrolled ? "opacity-100" : "opacity-0",
+          // Below xl the header always keeps its glass so the logo and menu icon stay legible over hero images
+          isScrolled || isOpen ? "opacity-100" : "opacity-100 xl:opacity-0",
         )}
       />
-      <nav className="container-luxury flex items-center justify-between">
+      <nav className="container-luxury flex items-center justify-between gap-6">
         {/* Logo */}
-        <Link
-          to="/"
-          className="font-serif text-2xl md:text-3xl tracking-wide text-foreground"
-        >
-          <span className="font-light">Little</span>
-          <span className="text-primary font-medium"> Nest</span>
+        <Link to="/" className="shrink-0">
+          <img
+            src={logo}
+            alt="Epikmakers Photography"
+            className={cn(
+              "w-auto transition-all duration-500",
+              isScrolled || isOpen ? "h-9 md:h-10" : "h-10 md:h-12",
+            )}
+          />
         </Link>
 
         {/* Desktop Navigation */}
-        <ul className="hidden lg:flex items-center gap-8">
+        <ul className="hidden xl:flex items-center gap-5 2xl:gap-8 [&_.nav-link]:whitespace-nowrap">
           {navLinks.slice(0, 1).map((link) => (
             <li key={link.path}>
               <Link
@@ -151,7 +191,7 @@ const Navigation = () => {
         {/* Book Now Button - Desktop */}
         <Link
           to="/contact"
-          className="hidden lg:block btn-luxury text-xs"
+          className="hidden xl:block shrink-0 whitespace-nowrap btn-luxury text-xs px-6"
         >
           Book a Session
         </Link>
@@ -159,7 +199,7 @@ const Navigation = () => {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="lg:hidden p-2 text-foreground rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+          className="xl:hidden -mr-2 p-2 text-foreground rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
           aria-label="Toggle menu"
           aria-expanded={isOpen}
         >
@@ -170,11 +210,12 @@ const Navigation = () => {
       {/* Mobile Menu */}
       <div
         className={cn(
-          "lg:hidden glass-panel-strong rounded-none border-0 shadow-none fixed inset-0 top-[72px] transition-all duration-500 overflow-y-auto",
+          "xl:hidden glass-panel-strong rounded-none border-0 shadow-none fixed inset-x-0 bottom-0 transition-all duration-500 overflow-y-auto overscroll-contain",
           isOpen ? "opacity-100 visible" : "opacity-0 invisible",
         )}
+        style={{ top: headerHeight }}
       >
-        <ul className="flex flex-col items-center gap-6 pt-16 pb-8">
+        <ul className="flex flex-col items-center gap-5 sm:gap-6 pt-8 sm:pt-12 pb-10">
           <li
             className={cn(
               "opacity-0 translate-y-4",

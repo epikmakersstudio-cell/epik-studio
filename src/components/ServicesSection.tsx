@@ -2,27 +2,43 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
-import babyshower from "@/assets/portfolio-babyshower.jpg";
 import maternity from "@/assets/portfolio-maternity.jpg";
 import newborn from "@/assets/portfolio-newborn.jpg";
 import prebirthday from "@/assets/portfolio-prebirthday.jpg";
+import family from "@/assets/portfolio-family.jpg";
+import fashion from "@/assets/portfolio-fashion.jpg";
+import wedding from "@/assets/portfolio-wedding.jpg";
 import ScrollReveal, { StaggerContainer, StaggerItem } from "./ScrollReveal";
 
 const services = [
-
   {
-    title: "Maternity & Baby Shower",
+    title: "Fashion",
     description:
-      "Capture the radiant beauty of motherhood in its most precious form",
-    image: maternity,
-    link: "/services/maternity",
+      "Bold, editorial imagery that brings your style and personality to life",
+    image: fashion,
+    link: "/services/fashion",
+    imagePosition: "object-top",
   },
-    {
-    title: "Baby Shower",
+  {
+    title: "Wedding",
     description:
-      "Celebrate the joy of anticipation with elegant, heartfelt photography",
-    image: babyshower,
+      "Timeless storytelling of your love, from the vows to the last dance",
+    image: wedding,
+    link: "/services/wedding",
+  },
+  {
+    title: "Baby Shower & Maternity",
+    description:
+      "Celebrate the radiant beauty of motherhood and the joy of anticipation",
+    image: maternity,
     link: "/services/baby-shower",
+  },
+  {
+    title: "Pre-Birthday & Birthday",
+    description:
+      "Whimsical celebrations capturing the magic of growing up",
+    image: prebirthday,
+    link: "/services/pre-birthday",
   },
   {
     title: "Newborn",
@@ -32,11 +48,11 @@ const services = [
     link: "/services/newborn",
   },
   {
-    title: "Pre-Birthday",
+    title: "Family Portraits",
     description:
-      "Whimsical celebrations capturing the magic of growing up",
-    image: prebirthday,
-    link: "/services/pre-birthday",
+      "Timeless portraits celebrating your family's unique story and connections",
+    image: family,
+    link: "/services/family-portraits",
   },
 ];
 
@@ -67,7 +83,7 @@ const ServicesSection = () => {
                   <motion.img
                     src={service.image}
                     alt={service.title}
-                    className="w-full h-full object-cover"
+                    className={`w-full h-full object-cover ${service.imagePosition ?? ""}`}
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
                   />
