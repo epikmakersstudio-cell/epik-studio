@@ -148,10 +148,10 @@ const Contact = () => {
                     <div>
                       <h4 className="font-medium mb-1">Phone</h4>
                       <a
-                        href="tel:+1234567890"
+                        href="tel:+919848255845"
                         className="text-muted-foreground text-sm hover:text-primary transition-colors"
                       >
-                        +1 (234) 567-890
+                        +91 9848255845
                       </a>
                     </div>
                   </div>
@@ -165,10 +165,10 @@ const Contact = () => {
                     <div>
                       <h4 className="font-medium mb-1">Email</h4>
                       <a
-                        href="mailto:hello@epikmakers.com"
+                        href="mailto:epiclittlenest@gmail.com"
                         className="text-muted-foreground text-sm hover:text-primary transition-colors"
                       >
-                        hello@epikmakers.com
+                        epiclittlenest@gmail.com
                       </a>
                     </div>
                   </div>
@@ -182,7 +182,7 @@ const Contact = () => {
                     <div>
                       <h4 className="font-medium mb-1">Studio Hours</h4>
                       <p className="text-muted-foreground text-sm">
-                        Monday – Friday: 9am – 6pm
+                        Monday – Friday: 10am – 8pm
                         <br />
                         Saturday: 10am – 4pm (By appointment)
                       </p>
@@ -302,7 +302,7 @@ const Contact = () => {
                           onChange={handleChange}
                           maxLength={20}
                           className="field-luxury"
-                          placeholder="+1 (234) 567-890"
+                          placeholder="+91 98765 43210"
                         />
                       </div>
                       <div>
