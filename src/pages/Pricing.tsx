@@ -1,5 +1,10 @@
 import { motion } from "framer-motion";
-import { Check, MessageCircle, Camera, Heart, Sparkles, Users, Baby, Cake, type LucideIcon } from "lucide-react";
+import { Link } from "react-router-dom";
+import {
+  Check, MessageCircle, Camera, Heart, Sparkles, Users, Baby, Cake, Star, Quote, ArrowRight,
+  type LucideIcon,
+} from "lucide-react";
+import { useReviews } from "@/hooks/useReviews";
 import { Helmet } from "react-helmet-async";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -118,6 +123,7 @@ const addOns = [
 ];
 
 const Pricing = () => {
+  const { reviews, averageRating, ratingBreakdown } = useReviews();
   return (
     <>
       <Helmet>
@@ -290,60 +296,93 @@ const Pricing = () => {
           </div>
         </section>
 
-        {/* FAQ-style Info */}
+        {/* Reviews & Ratings: shown once there is at least one review */}
+        {reviews.length > 0 && (
         <section className="section-padding bg-background">
-          <div className="container-luxury max-w-4xl">
+          <div className="container-luxury">
             <ScrollReveal animation="fadeUp" className="text-center mb-12">
               <p className="text-primary text-sm tracking-[0.3em] uppercase mb-4">
-                What to Expect
+                What Clients Say
               </p>
               <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl mb-6">
-                The Experience
+                Reviews & Ratings
               </h2>
               <div className="divider-elegant" />
             </ScrollReveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,20rem)_1fr] gap-8 items-start">
+              {/* Rating summary */}
               <ScrollReveal animation="slideLeft">
-                <div className="space-y-6">
-                  <div className="card-luxury p-6">
-                    <h4 className="font-serif text-lg mb-2">Booking Process</h4>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      After our initial WhatsApp consultation, we'll discuss your vision, 
-                      schedule your session, and finalize all details. A booking fee secures your date.
-                    </p>
+                <div className="bg-secondary surface-card p-6 sm:p-8 text-center">
+                  <p className="font-serif text-6xl font-medium leading-none mb-3">
+                    {averageRating.toFixed(1)}
+                  </p>
+                  <div className="flex justify-center gap-1 mb-2" aria-hidden>
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={20}
+                        className={i < Math.round(averageRating) ? "fill-gold text-gold" : "text-border"}
+                      />
+                    ))}
                   </div>
-                  <div className="card-luxury p-6">
-                    <h4 className="font-serif text-lg mb-2">Session Day</h4>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      Arrive relaxed and ready! We'll guide you through poses, capture candid 
-                      moments, and ensure everyone feels comfortable throughout the session.
-                    </p>
-                  </div>
+                  <p className="text-muted-foreground text-sm mb-6">
+                    Average rating from {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
+                  </p>
+                  <ul className="space-y-2 text-sm" aria-label="Rating breakdown">
+                    {ratingBreakdown.map(({ stars, count }) => (
+                      <li key={stars} className="flex items-center gap-3">
+                        <span className="w-10 shrink-0 text-left tabular-nums">{stars} ★</span>
+                        <span className="h-2 flex-1 rounded-full bg-border/70 overflow-hidden">
+                          <span
+                            className="block h-full rounded-full bg-gold"
+                            style={{ width: `${(count / reviews.length) * 100}%` }}
+                          />
+                        </span>
+                        <span className="w-6 shrink-0 text-right tabular-nums text-muted-foreground">
+                          {count}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    to="/reviews"
+                    className="btn-outline-luxury text-xs inline-flex items-center gap-2 mt-8"
+                  >
+                    Read All Reviews
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
                 </div>
               </ScrollReveal>
-              
-              <ScrollReveal animation="slideRight">
-                <div className="space-y-6">
-                  <div className="card-luxury p-6">
-                    <h4 className="font-serif text-lg mb-2">Editing & Delivery</h4>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      Your images are carefully edited within 2-3 weeks. You'll receive a 
-                      private online gallery to view, share, and download your photographs.
-                    </p>
-                  </div>
-                  <div className="card-luxury p-6">
-                    <h4 className="font-serif text-lg mb-2">Prints & Products</h4>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      Choose from premium prints, albums, and wall art. We partner with 
-                      professional labs to ensure museum-quality products that last generations.
-                    </p>
-                  </div>
-                </div>
-              </ScrollReveal>
+
+              {/* Latest reviews */}
+              <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 gap-6" staggerDelay={0.1}>
+                {reviews.slice(0, 3).map((review) => (
+                  <StaggerItem key={review.id ?? review.name}>
+                    <div className="card-luxury p-6 h-full flex flex-col relative">
+                      <Quote size={32} className="text-primary/10 absolute top-5 right-5" aria-hidden />
+                      <div className="flex gap-1 mb-4" aria-label={`${review.rating} out of 5 stars`}>
+                        {[...Array(review.rating)].map((_, i) => (
+                          <Star key={i} size={14} className="fill-gold text-gold" />
+                        ))}
+                      </div>
+                      <p className="text-foreground/80 text-sm leading-relaxed italic mb-6 flex-grow">
+                        "{review.content}"
+                      </p>
+                      <div className="border-t border-border/60 pt-4">
+                        <p className="font-serif text-lg">{review.name}</p>
+                        <p className="text-muted-foreground text-sm">
+                          {review.role} · {review.date}
+                        </p>
+                      </div>
+                    </div>
+                  </StaggerItem>
+                ))}
+              </StaggerContainer>
             </div>
           </div>
         </section>
+        )}
 
         {/* CTA Section */}
         <section className="section-padding bg-espresso text-cream">

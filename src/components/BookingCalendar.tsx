@@ -1,103 +1,96 @@
 import { useState } from "react";
-import { format, addDays, isBefore, isAfter, startOfToday } from "date-fns";
+import { format, addDays, isBefore, isAfter, startOfToday, parseISO } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { CalendarIcon, Clock, Check } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { API_ENABLED } from "@/lib/api";
+import { useAuth } from "@/hooks/useAuth";
+import { fetchAvailability, fetchCalendarInfo, formatTime } from "@/lib/bookings";
 
 interface BookingCalendarProps {
   selectedDate: Date | undefined;
+  // "HH:mm" when the API is connected; the display label otherwise
   selectedTime: string;
   onDateChange: (date: Date | undefined) => void;
   onTimeChange: (time: string) => void;
 }
 
-const timeSlots = [
-  "9:00 AM",
-  "10:00 AM",
-  "11:00 AM",
-  "12:00 PM",
-  "2:00 PM",
-  "3:00 PM",
-  "4:00 PM",
-  "5:00 PM",
-];
+// Used only while the API isn't connected (a preview; nothing is booked)
+const previewTimeSlots = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"];
 
-// Simulated booked dates (in a real app, this would come from a database)
-const bookedDates = [
-  addDays(new Date(), 2),
-  addDays(new Date(), 5),
-  addDays(new Date(), 8),
-  addDays(new Date(), 12),
-];
+const noSlotsMessage: Record<string, string> = {
+  closed: "The studio is closed on this day. Please choose another date.",
+  blocked: "This date isn't available. Please choose another.",
+  past: "This date has passed. Please choose another.",
+  "too-far": "We can't take bookings this far ahead yet.",
+};
 
-const BookingCalendar = ({
-  selectedDate,
-  selectedTime,
-  onDateChange,
-  onTimeChange,
-}: BookingCalendarProps) => {
+const BookingCalendar = ({ selectedDate, selectedTime, onDateChange, onTimeChange }: BookingCalendarProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const today = startOfToday();
+  const { token } = useAuth();
+  const dateKey = selectedDate ? format(selectedDate, "yyyy-MM-dd") : undefined;
+
+  const calendarInfo = useQuery({
+    queryKey: ["booking-calendar"],
+    queryFn: () => fetchCalendarInfo(token),
+    enabled: API_ENABLED,
+    staleTime: 5 * 60 * 1000,
+  });
+  const availability = useQuery({
+    queryKey: ["availability", dateKey],
+    queryFn: () => fetchAvailability(dateKey!, token),
+    enabled: API_ENABLED && !!dateKey,
+    staleTime: 30 * 1000,
+  });
+
+  const today = calendarInfo.data ? parseISO(calendarInfo.data.today) : startOfToday();
+  const maxDaysAhead = calendarInfo.data?.maxDaysAhead ?? 90;
 
   const isDateDisabled = (date: Date) => {
-    // Disable past dates
-    if (isBefore(date, today)) return true;
-    // Disable dates more than 3 months in the future
-    if (isAfter(date, addDays(today, 90))) return true;
-    // Disable Sundays
-    if (date.getDay() === 0) return true;
-    // Disable already booked dates
-    return bookedDates.some(
-      (bookedDate) =>
-        format(bookedDate, "yyyy-MM-dd") === format(date, "yyyy-MM-dd")
-    );
+    if (isBefore(date, today) || isAfter(date, addDays(today, maxDaysAhead))) return true;
+    if (!API_ENABLED) return date.getDay() === 0; // preview: closed Sundays
+    const info = calendarInfo.data;
+    if (!info) return false;
+    return info.closedWeekdays.includes(date.getDay()) || info.blockedDates.includes(format(date, "yyyy-MM-dd"));
   };
+
+  const slots = API_ENABLED
+    ? (availability.data?.slots ?? []).map((s) => ({ value: s.time, label: formatTime(s.time), available: s.available }))
+    : previewTimeSlots.map((label) => ({ value: label, label, available: true }));
+  const selectedLabel = API_ENABLED && selectedTime ? formatTime(selectedTime) : selectedTime;
+  const allTaken = slots.length > 0 && slots.every((s) => !s.available);
 
   return (
     <div className="space-y-6">
       {/* Date Selection */}
       <div>
-        <label className="block text-sm font-medium mb-3">
-          Select Your Preferred Date
-        </label>
+        <label className="block text-sm font-medium mb-3">Select Your Preferred Date</label>
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
             <button
-              className={cn(
-                "field-luxury flex items-center justify-between py-4 text-left",
-                !selectedDate && "text-muted-foreground"
-              )}
+              type="button"
+              className={cn("field-luxury flex items-center justify-between py-4 text-left", !selectedDate && "text-muted-foreground")}
             >
               <span className="flex items-center gap-3">
                 <CalendarIcon size={18} className="text-primary" />
-                {selectedDate ? (
-                  format(selectedDate, "EEEE, MMMM d, yyyy")
-                ) : (
-                  "Choose a date for your session"
-                )}
+                {selectedDate ? format(selectedDate, "EEEE, MMMM d, yyyy") : "Choose a date for your session"}
               </span>
-              {selectedDate && (
-                <Check size={18} className="text-primary" />
-              )}
+              {selectedDate && <Check size={18} className="text-primary" />}
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0 overflow-hidden" align="start">
             <div className="p-4 border-b border-border/60">
               <p className="font-serif text-lg">Choose a Date</p>
-              <p className="text-muted-foreground text-sm">
-                Available dates are highlighted
-              </p>
+              <p className="text-muted-foreground text-sm">Available dates are highlighted</p>
             </div>
             <Calendar
               mode="single"
               selected={selectedDate}
               onSelect={(date) => {
                 onDateChange(date);
+                onTimeChange("");
                 setIsOpen(false);
               }}
               disabled={isDateDisabled}
@@ -127,37 +120,49 @@ const BookingCalendar = ({
       {/* Time Selection */}
       {selectedDate && (
         <div className="animate-fade-up">
-          <label className="block text-sm font-medium mb-3">
-            Select Your Preferred Time
-          </label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {timeSlots.map((time) => {
-              const isSelected = selectedTime === time;
-              // Simulate some times being unavailable
-              const isUnavailable =
-                selectedDate &&
-                format(selectedDate, "E") === "Sat" &&
-                ["4:00 PM", "5:00 PM"].includes(time);
-
-              return (
-                <button
-                  key={time}
-                  type="button"
-                  onClick={() => !isUnavailable && onTimeChange(time)}
-                  disabled={isUnavailable}
-                  aria-pressed={isSelected}
-                  className={cn("chip-luxury", isSelected && "is-active")}
-                >
-                  <Clock size={14} />
-                  {time}
-                </button>
-              );
-            })}
-          </div>
-          {selectedDate && format(selectedDate, "E") === "Sat" && (
-            <p className="text-muted-foreground text-xs mt-3">
-              * Saturday sessions end at 4 PM
+          <label className="block text-sm font-medium mb-3">Select Your Preferred Time</label>
+          {API_ENABLED && availability.isLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3" aria-label="Loading times">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="h-11 rounded-md bg-muted animate-pulse" />
+              ))}
+            </div>
+          ) : API_ENABLED && availability.isError ? (
+            <p className="text-sm text-muted-foreground">
+              We couldn't load the free times.{" "}
+              <button type="button" onClick={() => availability.refetch()} className="text-primary font-medium hover:underline">
+                Try again
+              </button>
             </p>
+          ) : slots.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {noSlotsMessage[availability.data?.reason ?? ""] ?? "There are no times left on this day. Please choose another date."}
+            </p>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {slots.map((slot) => {
+                  const isSelected = selectedTime === slot.value;
+                  return (
+                    <button
+                      key={slot.value}
+                      type="button"
+                      onClick={() => slot.available && onTimeChange(slot.value)}
+                      disabled={!slot.available}
+                      aria-pressed={isSelected}
+                      aria-label={slot.available ? slot.label : `${slot.label} (booked)`}
+                      className={cn("chip-luxury", isSelected && "is-active", !slot.available && "line-through")}
+                    >
+                      <Clock size={14} />
+                      {slot.label}
+                    </button>
+                  );
+                })}
+              </div>
+              {allTaken && (
+                <p className="text-muted-foreground text-xs mt-3">This day is fully booked. Please choose another date.</p>
+              )}
+            </>
           )}
         </div>
       )}
@@ -165,11 +170,9 @@ const BookingCalendar = ({
       {/* Summary */}
       {selectedDate && selectedTime && (
         <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg animate-fade-up">
-          <p className="text-sm text-muted-foreground mb-1">
-            Your Selected Appointment
-          </p>
+          <p className="text-sm text-muted-foreground mb-1">Your Selected Appointment</p>
           <p className="font-serif text-lg">
-            {format(selectedDate, "EEEE, MMMM d, yyyy")} at {selectedTime}
+            {format(selectedDate, "EEEE, MMMM d, yyyy")} at {selectedLabel}
           </p>
         </div>
       )}

@@ -1,6 +1,17 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, UserRound, LogOut, CalendarDays } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
+import { LOGIN_REQUIRED, signInPath } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/New-logo-Epik-dark.png";
 import { services } from "@/data/services";
@@ -67,6 +78,17 @@ const Navigation = () => {
   }, []);
 
   const isServicePage = location.pathname.startsWith("/services");
+  const isAuthPage = location.pathname === "/signin" || location.pathname === "/signup";
+
+  const { isSignedIn, user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const handleSignOut = () => {
+    signOut();
+    toast({ title: "Signed out", description: "See you again soon." });
+    // Every page is members-only, so signing out ends on the sign-in page
+    if (LOGIN_REQUIRED) navigate("/signin", { replace: true });
+  };
 
   return (
     <header
@@ -102,7 +124,7 @@ const Navigation = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <ul className="hidden xl:flex items-center gap-5 2xl:gap-8 [&_.nav-link]:whitespace-nowrap">
+        <ul className="hidden xl:flex items-center gap-4 2xl:gap-8 [&_.nav-link]:whitespace-nowrap">
           {navLinks.slice(0, 1).map((link) => (
             <li key={link.path}>
               <Link
@@ -182,13 +204,56 @@ const Navigation = () => {
           ))}
         </ul>
 
-        {/* Book Now Button - Desktop */}
-        <Link
-          to="/contact"
-          className="hidden xl:block shrink-0 whitespace-nowrap btn-luxury text-xs px-6"
-        >
-          Book a Session
-        </Link>
+        {/* Account + Book Now - Desktop */}
+        <div className="hidden xl:flex shrink-0 items-center gap-4 2xl:gap-5">
+          {isSignedIn ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={cn(
+                  "nav-link whitespace-nowrap inline-flex items-center gap-1.5 focus-visible:outline-none",
+                  location.pathname === "/my-bookings" && "text-primary",
+                )}
+                aria-label={`Account menu for ${user?.name}`}
+              >
+                <UserRound size={16} />
+                <span className="max-w-[7rem] truncate">{user?.name.split(" ")[0]}</span>
+                <ChevronDown size={14} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="glass-panel w-56">
+                <DropdownMenuLabel className="font-normal">
+                  <p className="font-medium truncate">{user?.name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/my-bookings" className="cursor-pointer">
+                    <CalendarDays size={16} className="mr-2" /> My Bookings
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={handleSignOut} className="cursor-pointer">
+                  <LogOut size={16} className="mr-2" /> Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link
+              to={signInPath(location.pathname)}
+              className={cn(
+                "nav-link whitespace-nowrap inline-flex items-center gap-1.5",
+                isAuthPage && "text-primary after:w-full",
+              )}
+            >
+              <UserRound size={16} />
+              Sign In
+            </Link>
+          )}
+          <Link
+            to="/contact"
+            className="whitespace-nowrap btn-luxury text-xs px-6"
+          >
+            Book a Session
+          </Link>
+        </div>
 
         {/* Mobile Menu Button */}
         <button
@@ -300,6 +365,48 @@ const Navigation = () => {
               </Link>
             </li>
           ))}
+          <li className="text-center">
+            {isSignedIn ? (
+              <>
+                <p className="text-sm text-muted-foreground mb-1">Signed in as {user?.name}</p>
+                <Link
+                  to="/my-bookings"
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    "text-2xl font-serif tracking-wide inline-flex items-center gap-2 mb-4",
+                    location.pathname === "/my-bookings" ? "text-primary" : "text-foreground",
+                  )}
+                >
+                  <CalendarDays size={22} />
+                  My Bookings
+                </Link>
+                <br />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    handleSignOut();
+                  }}
+                  className="text-2xl font-serif tracking-wide inline-flex items-center gap-2 text-foreground"
+                >
+                  <LogOut size={22} />
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link
+                to={signInPath(location.pathname)}
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  "text-2xl font-serif tracking-wide inline-flex items-center gap-2",
+                  isAuthPage ? "text-primary" : "text-foreground",
+                )}
+              >
+                <UserRound size={22} />
+                Sign In
+              </Link>
+            )}
+          </li>
           <li>
             <Link
               to="/contact"

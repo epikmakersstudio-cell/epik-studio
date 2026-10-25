@@ -4,27 +4,28 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-import hero1 from "@/assets/hero-1.jpg";
-import hero2 from "@/assets/hero-2.jpg";
-import hero3 from "@/assets/hero-3.jpg";
+import { services, type ServiceId } from "@/data/services";
+import heroFashion from "@/assets/hero-fashion.jpg";
+import heroWedding from "@/assets/hero-wedding.jpg";
+import heroMaternity from "@/assets/hero-1.jpg";
+import heroBirthday from "@/assets/hero-birthday.jpg";
+import heroNewborn from "@/assets/hero-22.jpg";
+import heroFamily from "@/assets/hero-family.jpg";
 
-const slides = [
-  {
-    image: hero1,
-    title: "Maternity",
-    subtitle: "Celebrating the beauty of new beginnings",
-  },
-  {
-    image: hero2,
-    title: "Newborn",
-    subtitle: "Capturing those precious first moments",
-  },
-  {
-    image: hero3,
-    title: "Baby Shower",
-    subtitle: "Celebrating the joy of anticipation",
-  },
-];
+const slideDetails: Record<ServiceId, { image: string; subtitle: string }> = {
+  fashion: { image: heroFashion, subtitle: "Bold, editorial style" },
+  wedding: { image: heroWedding, subtitle: "Your love story, beautifully told" },
+  "baby-shower-maternity": { image: heroMaternity, subtitle: "Celebrating the beauty of new beginnings" },
+  "pre-birthday-birthday": { image: heroBirthday, subtitle: "Celebrating every milestone" },
+  newborn: { image: heroNewborn, subtitle: "Capturing those precious first moments" },
+  "family-portraits": { image: heroFamily, subtitle: "Timeless family memories" },
+};
+
+// One slide per service, in the same order as the services menu
+const slides = services.map((service) => ({
+  title: service.name,
+  ...slideDetails[service.id],
+}));
 
 const HeroSlideshow = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -99,7 +100,7 @@ const HeroSlideshow = () => {
             />
             {/* Overlay */}
             <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background/80" />
-            <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/40 to-transparent" />
             {/* On narrow screens the text spans the whole image, so give its lower half a stronger wash */}
             <div className="absolute inset-x-0 bottom-0 h-full bg-gradient-to-t from-background/90 via-background/70 to-transparent md:hidden" />
           </div>
@@ -117,7 +118,7 @@ const HeroSlideshow = () => {
           </p>
           <h1
             key={currentSlide}
-            className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-medium text-foreground mb-6 animate-fade-up opacity-0 [animation-delay:400ms] [animation-fill-mode:forwards]"
+            className="font-serif text-[2.5rem] leading-[1.1] sm:text-6xl md:text-7xl font-medium text-foreground mb-6 animate-fade-up opacity-0 [animation-delay:400ms] [animation-fill-mode:forwards]"
           >
             {slides[currentSlide].title}
           </h1>

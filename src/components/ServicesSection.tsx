@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 import maternity from "@/assets/portfolio-maternity.jpg";
 import newborn from "@/assets/portfolio-newborn.jpg";
-import prebirthday from "@/assets/portfolio-prebirthday.jpg";
+import prebirthday from "@/assets/portfolio-prebirthday-1.jpg";
 import family from "@/assets/portfolio-family.jpg";
 import fashion from "@/assets/portfolio-fashion.jpg";
 import wedding from "@/assets/portfolio-wedding.jpg";
@@ -86,7 +86,7 @@ const ServicesSection = () => {
                     <p className="text-cream/80 text-sm md:text-base font-light mb-4 max-w-xs">
                       {service.description}
                     </p>
-                    <div className="flex items-center gap-2 text-primary text-sm tracking-wider uppercase">
+                    <div className="self-start inline-flex items-center gap-2 rounded-md bg-primary text-primary-foreground px-5 py-2.5 text-xs sm:text-sm font-medium tracking-wider uppercase shadow-elevated transition-colors duration-300 group-hover:bg-primary/90">
                       <span>Explore</span>
                       <ArrowRight
                         size={16}

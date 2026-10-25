@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import BookingCalendar from "@/components/BookingCalendar";
 import ScrollReveal, { StaggerContainer, StaggerItem } from "@/components/ScrollReveal";
 import { MapPin, Phone, Mail, Clock, MessageCircle, CheckCircle } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { services } from "@/data/services";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { useQueryClient } from "@tanstack/react-query";
+import { API_ENABLED, ApiError } from "@/lib/api";
+import { createBooking, sendContactMessage } from "@/lib/bookings";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name too long"),
@@ -16,8 +22,19 @@ const contactSchema = z.object({
   message: z.string().trim().max(1000, "Message too long").optional(),
 });
 
+// A general enquiry must say something; a booking request can rely on the chosen date and time
+const messageSchema = contactSchema.extend({
+  message: z.string().trim().min(1, "Please enter your message").max(1000, "Message too long"),
+});
+
+type FormMode = "booking" | "message";
+
 const Contact = () => {
   const { toast } = useToast();
+  const [mode, setMode] = useState<FormMode>("booking");
+  const isBooking = mode === "booking";
+  const { user, token } = useAuth();
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -30,11 +47,17 @@ const Contact = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Save signed-in clients from retyping their details
+  useEffect(() => {
+    if (!user) return;
+    setFormData((f) => ({ ...f, name: f.name || user.name, email: f.email || user.email }));
+  }, [user]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
     
-    const result = contactSchema.safeParse(formData);
+    const result = (isBooking ? contactSchema : messageSchema).safeParse(formData);
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       result.error.errors.forEach((err) => {
@@ -47,18 +70,69 @@ const Contact = () => {
     }
 
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Booking Request Sent!",
-      description: "Thank you for reaching out. We'll confirm your appointment within 24 hours.",
-    });
+
+    if (API_ENABLED) {
+      const details = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim() || undefined,
+        serviceId: formData.service || undefined,
+      };
+      try {
+        if (isBooking) {
+          await createBooking(
+            {
+              ...details,
+              date: format(selectedDate!, "yyyy-MM-dd"),
+              time: selectedTime,
+              notes: formData.message.trim() || undefined,
+            },
+            token,
+          );
+          queryClient.invalidateQueries({ queryKey: ["availability"] });
+          queryClient.invalidateQueries({ queryKey: ["my-bookings"] });
+        } else {
+          await sendContactMessage({ ...details, message: formData.message.trim() }, token);
+        }
+      } catch (error) {
+        setIsSubmitting(false);
+        if (error instanceof ApiError) {
+          // The API calls the booking notes "notes"; on this form they're the message box
+          const { notes, ...fieldErrors } = error.fieldErrors;
+          setErrors(notes ? { ...fieldErrors, message: notes } : fieldErrors);
+          // Someone else took the slot a moment ago: refresh the free times and ask for another
+          if (error.status === 409) {
+            setSelectedTime("");
+            queryClient.invalidateQueries({ queryKey: ["availability"] });
+          }
+        }
+        toast({
+          title: isBooking ? "Couldn't send your booking" : "Couldn't send your message",
+          description: error instanceof Error ? error.message : "Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+    } else {
+      // Preview only: without the API nothing is sent
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+
+    toast(
+      isBooking
+        ? {
+            title: "Booking Request Sent!",
+            description: "Thank you for reaching out. We'll confirm your appointment within 24 hours.",
+          }
+        : {
+            title: "Message Sent!",
+            description: "Thank you for getting in touch. We'll reply within 24 hours.",
+          },
+    );
     
     setFormData({
-      name: "",
-      email: "",
+      name: user?.name ?? "",
+      email: user?.email ?? "",
       phone: "",
       service: "",
       message: "",
@@ -90,11 +164,11 @@ const Contact = () => {
               Get in Touch
             </p>
             <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-medium mb-6">
-              Book Your Session
+              Contact Us
             </h1>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Ready to capture your special moments? Select your preferred date
-              and time below
+              Book a session on your preferred date and time, or send us a
+              message with any questions
             </p>
             <div className="divider-elegant mt-8" />
           </ScrollReveal>
@@ -222,21 +296,50 @@ const Contact = () => {
               </div>
             </ScrollReveal>
 
-            {/* Booking Form */}
+            {/* Booking / Contact Form */}
             <ScrollReveal animation="slideRight" delay={0.2}>
-              <div className="bg-secondary p-8 md:p-10 surface-card">
-                <h3 className="font-serif text-2xl mb-6">Schedule Your Session</h3>
-                
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Calendar */}
-                  <BookingCalendar
-                    selectedDate={selectedDate}
-                    selectedTime={selectedTime}
-                    onDateChange={setSelectedDate}
-                    onTimeChange={setSelectedTime}
-                  />
+              <div className="bg-secondary p-6 sm:p-8 md:p-10 surface-card">
+                {/* Same form for both: booking adds the date & time picker */}
+                <div
+                  role="tablist"
+                  aria-label="What would you like to do?"
+                  className="grid grid-cols-2 gap-2 mb-8"
+                >
+                  {([
+                    ["booking", "Book a Session"],
+                    ["message", "Send a Message"],
+                  ] as const).map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      role="tab"
+                      aria-selected={mode === value}
+                      onClick={() => {
+                        setMode(value);
+                        setErrors({});
+                      }}
+                      className={cn("chip-luxury w-full", mode === value && "is-active")}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
 
-                  <div className="border-t border-border/60 pt-6">
+                <h3 className="font-serif text-2xl mb-6">
+                  {isBooking ? "Schedule Your Session" : "Send Us a Message"}
+                </h3>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {isBooking && (
+                    <BookingCalendar
+                      selectedDate={selectedDate}
+                      selectedTime={selectedTime}
+                      onDateChange={setSelectedDate}
+                      onTimeChange={setSelectedTime}
+                    />
+                  )}
+
+                  <div className={cn(isBooking && "border-t border-border/60 pt-6")}>
                     <h4 className="font-medium mb-4">Your Information</h4>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -304,6 +407,9 @@ const Contact = () => {
                           className="field-luxury"
                           placeholder="+91 98765 43210"
                         />
+                        {errors.phone && (
+                          <p className="text-destructive text-xs mt-1">{errors.phone}</p>
+                        )}
                       </div>
                       <div>
                         <label
@@ -335,31 +441,41 @@ const Contact = () => {
                         htmlFor="message"
                         className="block text-sm font-medium mb-2"
                       >
-                        Special Requests
+                        {isBooking ? "Special Requests" : "Your Message *"}
                       </label>
                       <textarea
                         id="message"
                         name="message"
                         value={formData.message}
                         onChange={handleChange}
-                        rows={3}
+                        required={!isBooking}
+                        rows={isBooking ? 3 : 5}
                         maxLength={1000}
                         className="field-luxury resize-none"
-                        placeholder="Any special requests or details..."
+                        placeholder={
+                          isBooking
+                            ? "Any special requests or details..."
+                            : "How can we help you?"
+                        }
                       />
+                      {errors.message && (
+                        <p className="text-destructive text-xs mt-1">{errors.message}</p>
+                      )}
                     </div>
                   </div>
 
-                  <button 
-                    type="submit" 
-                    disabled={isSubmitting || !selectedDate || !selectedTime}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || (isBooking && (!selectedDate || !selectedTime))}
                     className="w-full btn-luxury disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isSubmitting ? "Sending..." : "Request Booking"}
+                    {isSubmitting ? "Sending..." : isBooking ? "Request Booking" : "Send Message"}
                   </button>
-                  
+
                   <p className="text-xs text-muted-foreground text-center">
-                    We'll confirm your appointment via email within 24 hours
+                    {isBooking
+                      ? "We'll confirm your appointment via email within 24 hours"
+                      : "We'll reply via email within 24 hours"}
                   </p>
                 </form>
               </div>

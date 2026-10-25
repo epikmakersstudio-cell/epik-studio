@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import photographerImage from "@/assets/photographer.jpg";
+import artistImage from "@/assets/artist.jpg";
 import ScrollReveal from "./ScrollReveal";
 
 const AboutPreview = () => {
@@ -26,8 +26,8 @@ const AboutPreview = () => {
             <div ref={imageRef} className="relative aspect-[3/4] max-w-md mx-auto lg:mx-0 overflow-hidden rounded-sm">
               <motion.img
                 style={{ y: imageY }}
-                src={photographerImage}
-                alt="Professional Photographer"
+                src={artistImage}
+                alt="The Epikmakers photographer cradling a sleeping newborn"
                 className="w-[110%] h-[120%] object-cover shadow-elevated absolute -top-[10%] left-0"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.5 }}

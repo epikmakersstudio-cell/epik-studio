@@ -1,54 +1,100 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { services, type ServiceId } from "@/data/services";
+import PortfolioGallery from "@/components/PortfolioGallery";
 
+import fashion from "@/assets/portfolio-fashion.jpg";
+import fashion2 from "@/assets/portfolio-fashion-2.jpg";
+import heroFashion from "@/assets/hero-fashion.jpg";
+import wedding from "@/assets/portfolio-wedding.jpg";
+import wedding2 from "@/assets/portfolio-wedding-2.jpg";
+import heroWedding from "@/assets/hero-wedding.jpg";
 import babyshower from "@/assets/portfolio-babyshower.jpg";
 import maternity from "@/assets/portfolio-maternity.jpg";
-import newborn from "@/assets/portfolio-newborn.jpg";
-import prebirthday from "@/assets/portfolio-prebirthday.jpg";
+import couple1 from "@/assets/couple (1).jpeg";
+import couple2 from "@/assets/couple (2).jpeg";
+import couple4 from "@/assets/couple (4).jpeg";
 import hero1 from "@/assets/hero-1.jpg";
-import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
+import birthday from "@/assets/portfolio-prebirthday-1.jpg";
+import birthday2 from "@/assets/portfolio-birthday-2.jpg";
+import heroBirthday from "@/assets/hero-birthday.jpg";
+import newborn from "@/assets/portfolio-newborn.jpg";
+import newbornWrap from "@/assets/portfolio-prebirthday.jpg";
+import baby1 from "@/assets/baby (1).jpeg";
+import baby3 from "@/assets/baby (3).jpeg";
+import hero2 from "@/assets/hero-2.jpg";
+import hero22 from "@/assets/hero-22.jpg";
+import family from "@/assets/portfolio-family.jpg";
+import family2 from "@/assets/portfolio-family-2.jpg";
+import heroFamily from "@/assets/hero-family.jpg";
 
-const serviceName = (id: ServiceId) => services.find((s) => s.id === id)!.name;
+type CategoryDetails = {
+  subtitle: string;
+  description: string;
+  coverImage: string;
+  images: string[];
+};
 
-// Only services with studio work to show are listed here, in the same order as the services menu
-const categories = [
-  {
-    id: "baby-shower-maternity",
-    title: serviceName("baby-shower-maternity"),
+const categoryDetails: Record<ServiceId, CategoryDetails> = {
+  fashion: {
+    subtitle: "Editorial style",
+    description:
+      "Bold, confident imagery for portfolios, brands and personal style shoots. We plan every look, guide every pose and finish each frame with magazine-quality retouching.",
+    coverImage: heroFashion,
+    images: [fashion, fashion2, heroFashion],
+  },
+  wedding: {
+    subtitle: "Love stories",
+    description:
+      "From the first look to the last dance, we tell the story of your wedding day with candid moments, heartfelt rituals and timeless portraits of the two of you.",
+    coverImage: heroWedding,
+    images: [wedding, wedding2, heroWedding],
+  },
+  "baby-shower-maternity": {
     subtitle: "The beauty of motherhood",
     description:
       "Celebrate the incredible journey of pregnancy and the joy of welcoming a new life. From ethereal maternity portraits to the heartfelt moments of your baby shower, we create timeless images of this transformative time.",
     coverImage: maternity,
-    images: [maternity, babyshower, hero1, hero3],
+    images: [couple2, couple4, couple1, maternity, babyshower, hero1, hero2, hero3],
   },
-  {
-    id: "pre-birthday-birthday",
-    title: serviceName("pre-birthday-birthday"),
+  "pre-birthday-birthday": {
     subtitle: "Whimsical celebrations",
     description:
       "Mark your little one's milestone with magical, playful photography. From themed pre-birthday shoots to the birthday party itself, we create enchanting images that capture their unique personality.",
-    coverImage: prebirthday,
-    images: [prebirthday],
+    coverImage: heroBirthday,
+    images: [birthday, birthday2, heroBirthday],
   },
-  {
-    id: "newborn",
-    title: serviceName("newborn"),
+  newborn: {
     subtitle: "First precious moments",
     description:
       "Those tiny fingers, peaceful sleeps, and pure innocence—newborn photography preserves the fleeting beauty of your baby's earliest days in artistic, tender portraits.",
     coverImage: newborn,
-    images: [newborn, hero2],
+    images: [baby1, newbornWrap, baby3, newborn, hero22],
   },
-];
+  "family-portraits": {
+    subtitle: "Generations together",
+    description:
+      "Timeless portraits that celebrate the bonds between parents, children and grandparents—relaxed, natural sessions in the studio or outdoors that let your family's personality shine.",
+    coverImage: heroFamily,
+    images: [family2, family, heroFamily],
+  },
+};
+
+// Every service gets a portfolio section, in the same order as the services menu
+const categories = services.map((service) => ({
+  id: service.id,
+  title: service.name,
+  ...categoryDetails[service.id],
+}));
 
 const Portfolio = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<(typeof categories)[number] | null>(null);
+  const closeGallery = useCallback(() => setSelectedCategory(null), []);
 
   return (
     <main className="min-h-screen">
@@ -148,7 +194,7 @@ const Portfolio = () => {
                     </div>
 
                     <motion.button
-                      onClick={() => setSelectedCategory(category.id)}
+                      onClick={() => setSelectedCategory(category)}
                       className="btn-outline-luxury text-xs"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -163,42 +209,9 @@ const Portfolio = () => {
         </div>
       </section>
 
-      {/* Lightbox Modal */}
+      {/* Full gallery: photos uploaded through the API, each linked to its Instagram post */}
       {selectedCategory && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-espresso/85 backdrop-blur-md z-50 flex items-center justify-center p-4"
-          onClick={() => setSelectedCategory(null)}
-        >
-          <motion.div 
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            className="max-w-4xl w-full"
-          >
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {categories
-                .find((c) => c.id === selectedCategory)
-                ?.images.map((img, i) => (
-                  <div
-                    key={i}
-                    className="aspect-square rounded-sm overflow-hidden"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <img
-                      src={img}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
-            </div>
-            <p className="text-cream text-center mt-6 text-sm">
-              Click anywhere to close
-            </p>
-          </motion.div>
-        </motion.div>
+        <PortfolioGallery category={selectedCategory} onClose={closeGallery} />
       )}
 
       <Footer />

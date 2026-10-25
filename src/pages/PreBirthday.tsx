@@ -6,7 +6,8 @@ import Footer from "@/components/Footer";
 import ScrollReveal, { StaggerContainer, StaggerItem } from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import prebirthday from "@/assets/portfolio-prebirthday.jpg";
+import prebirthday from "@/assets/portfolio-prebirthday-1.jpg";
+import heroBirthday from "@/assets/hero-birthday.jpg";
 
 const features = [
   { icon: Camera, title: "Theme Sessions", description: "Custom setups matching your chosen theme" },
@@ -75,7 +76,7 @@ const PreBirthday = () => {
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
             <img
-              src={prebirthday}
+              src={heroBirthday}
               alt="Pre-Birthday Photography"
               className="w-full h-full object-cover"
             />
